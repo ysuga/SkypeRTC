@@ -37,20 +37,20 @@ endif(STATIC_LIBS)
 
 set(SKYPEKIT_DIR $ENV{SKYPEKIT_ROOT})
 
-set(SKYPEKIT_INC_DIR  ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/src/api 
-    ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/src/ipc 
-    ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/src/types 
-    ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/src/platform/threading 
-    ${SKYPEKIT_DIR}ipc/cpp 
-    ${SKYPEKIT_DIR}ipc/cpp/platform/se 
-    ${SKYPEKIT_DIR}ipc/cpp/ssl/cyassl/include 
+set(SKYPEKIT_INC_DIR  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/api 
+    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/ipc 
+    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/types 
+    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/platform/threading 
+    ${SKYPEKIT_DIR}/ipc/cpp 
+    ${SKYPEKIT_DIR}/ipc/cpp/platform/se 
+    ${SKYPEKIT_DIR}/ipc/cpp/ssl/cyassl/include 
     ${SKYPEKIT_DIR}/ipc/cpp/ssl/cyassl/ctaocrypt/include 
     ${SKYPEKIT_DIR}/ipc/cpp/ssl/cyassl/include/openssl 
-    ${SKYPEKIT_DIR}ipc/cpp/VideoBuffers
+    ${SKYPEKIT_DIR}/ipc/cpp/VideoBuffers
 )
 
-set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
-    ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a
+set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
+    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a
 )
 
 
@@ -64,7 +64,7 @@ set(SHARE_INSTALL_DIR
 
 # Get necessary dependency information
 if(NOT WIN32)
-    list(APPEND SKYPEKIT_INC_DIR ${SKYPEKIT_DIR}interfaces/skype/cpp_embedded/src/platform/threading/pthread)
+    list(APPEND SKYPEKIT_INC_DIR ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/platform/threading/pthread)
 
     list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 endif(NOT WIN32)
