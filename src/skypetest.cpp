@@ -2,14 +2,14 @@
 #include <iostream>
 
 
-int main(void) {
-  std::string skypeName = "suga.yuki2";
-  std::string passwd = "yggvb47v";
+int main(int argc, char* argv[]) {
+  std::string skypeName = argv[1];
+  std::string passwd = argv[2];
   std::cout << "Skype Test" << std::endl;
   try {
     SkypeEx skype;
     skype.setAutoTakeUserName("ysuga0731");
-    skype.loadKeyPair("../key.pem");
+    skype.loadKeyPair("/Users/ysuga/key.pem");
 
     skype.login(skypeName, passwd);
     

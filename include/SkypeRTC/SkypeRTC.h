@@ -282,6 +282,14 @@ class SkypeRTC
   /*!
    */
   OutPort<RTC::TimedOctetSeq> m_inputStreamOut;
+  RTC::CameraImage m_previewImage;
+  /*!
+   */
+  OutPort<RTC::CameraImage> m_previewImageOut;
+  RTC::CameraImage m_incomingImage;
+  /*!
+   */
+  OutPort<RTC::CameraImage> m_incomingImageOut;
   
   // </rtc-template>
 

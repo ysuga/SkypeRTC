@@ -15,6 +15,7 @@ class SkypeImage {
   uint32_t getHeight() {return m_Height;}
   uint32_t getBufferLength() {return m_BufferLength;}
   uint32_t getColorModel() {return m_ColorModel;}
+  uint8_t* getBuffer(){return m_pBuffer;}
  public:
 
   enum COLOR_MODEL {
@@ -53,7 +54,18 @@ class SkypeImage {
       }
     }
 
-    void copyToBuffer(const uint8_t* src) {
-      memcpy(m_pBuffer, src, m_BufferLength);
+    void copyToBuffer(const uint8_t* src, uint32_t colorModel) {
+      if(colorModel == getColorModel()) {
+	memcpy(m_pBuffer, src, m_BufferLength);
+      } else if(getColorModel() == COLOR_RGB888 && colorModel == COLOR_ARGB8888) {
+	for(int h = 0;h < m_Height;h++) {
+	  for(int w = 0;w < m_Width;w++) {
+	    int index = m_Width*h + w;
+	    m_pBuffer[index*3+0] = src[index*4+1];
+	    m_pBuffer[index*3+1] = src[index*4+2];
+	    m_pBuffer[index*3+2] = src[index*4+3];
+	  }
+	}
+      }
     }
 };      

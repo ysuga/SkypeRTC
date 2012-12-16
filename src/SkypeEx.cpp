@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SkypeEx.h"
-#include "skypetest.h"
+
 
 
 #define SID_MAKEFOURCC(ch0, ch1, ch2, ch3) \
@@ -64,7 +64,7 @@ void SkypeEx::login(const std::string& skypeName, const std::string& passwd)
     return;
   }
   std::cout << "Failed." << std::endl;
-  throw LoginException();
+  //  throw LoginException();
 }
 
 void SkypeEx::logout()
@@ -240,10 +240,10 @@ bool SkypeEx::updatePreviewFrame()
   if(bufferFormat != m_PreviewBuffer.getColorModel() ||
      bufferWidth  != m_PreviewBuffer.getWidth() ||
      bufferHeight != m_PreviewBuffer.getHeight() ) {
-    m_PreviewBuffer.allocImageBuffer(bufferWidth, bufferHeight, bufferFormat);
+    m_PreviewBuffer.allocImageBuffer(bufferWidth, bufferHeight, SkypeImage::COLOR_RGB888);
   }
 
-  m_PreviewBuffer.copyToBuffer((const uint8_t*)m_PreviewClient.bufferData(buffer));
+  m_PreviewBuffer.copyToBuffer((const uint8_t*)m_PreviewClient.bufferData(buffer), bufferFormat);
 
   return true;
 }

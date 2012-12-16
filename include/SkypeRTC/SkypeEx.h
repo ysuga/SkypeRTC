@@ -62,6 +62,10 @@ class SkypeEx : public Skype::Skype {
   SkypeImage m_IncomingBuffer;
 
  public:
+  SkypeImage* getPreviewFrame() { return &m_PreviewBuffer; }
+  SkypeImage* getIncomingFrame() { return &m_IncomingBuffer; }
+
+ public:
 
   SkypeEx();
   ~SkypeEx();
@@ -119,7 +123,7 @@ class SkypeEx : public Skype::Skype {
   
   bool startPreview();
 
-  void getPreviewFrame();
+  //  void getPreviewFrame();
 
  public:
   void onContactGroupChange(ContactGroupEx& contactGroup);

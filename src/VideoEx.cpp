@@ -1,10 +1,11 @@
+#include "SkypeEx.h"
 #include "VideoEx.h"
 #include <iostream>
 
 VideoEx::VideoEx(unsigned int oid, SERootObject* root):
   Video(oid, root), m_IncomingStream(false), m_LocalPreview(false)
 {
-
+  m_pOwner = root;
 }
 
 VideoEx::~VideoEx()
@@ -15,7 +16,6 @@ VideoEx::~VideoEx()
 
 void VideoEx::OnChange(int prop)
 {
-
 #ifdef DEBUG
   std::cout << __FILE__ << ":OnChange" << std::endl;
 #endif
@@ -24,24 +24,14 @@ void VideoEx::OnChange(int prop)
     GetPropStatus(vidStatus);
     
     if ( m_LocalPreview ) {
-#ifdef DEBUG
-      std::cout << "LOCAL" << std::endl;
-#endif
-      //      QString dbg = "LOCAL ";
-      //      dbg.append((const char*)tostring(vidStatus));
-      //      dispatcher->log(dbg);
       return;
     };
 
-    //QString dbg;
     if(m_IncomingStream) {
       std::cout << "Incoming" << std::endl;
     } else {
       std::cout << "Outgoing" << std::endl;
     }
-    //if ( incomingStream ) dbg = "INCOMING "; else dbg = "OUTGOING ";
-    //dbg.append((const char*)tostring(vidStatus));
-    //dispatcher->log(dbg);
     
     if ( vidStatus == Video::AVAILABLE ) this->Start();
     
@@ -49,8 +39,13 @@ void VideoEx::OnChange(int prop)
       if ( m_IncomingStream ) {
 	Conversation::Ref convX;
 	this->GetPropConvoId(convX);
-	//dispatcher->log("Incoming video stream is now running.");
-	//dispatcher->SendOpenVideoWindowSignal(this->participant);
+	SEString partName;
+	m_Participant->GetPropIdentity(partName);
+	SEString autotake(((SkypeEx*)m_pOwner)->getAutoTakeUserName().c_str());
+	if(partName.equals(autotake)) {
+	  std::cout << "Get DA ZE!!!" << std::endl;
+	}
+
       }
     };
 

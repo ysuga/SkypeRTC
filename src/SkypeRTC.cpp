@@ -50,7 +50,9 @@ SkypeRTC::SkypeRTC(RTC::Manager* manager)
     m_goingMessageIn("goingMessage", m_goingMessage),
     m_outputStreamIn("outputStream", m_outputStream),
     m_comingMessageOut("comingMessage", m_comingMessage),
-    m_inputStreamOut("inputStream", m_inputStream)
+    m_inputStreamOut("inputStream", m_inputStream),
+    m_previewImageOut("previewImage", m_previewImage),
+    m_incomingImageOut("incomingImage", m_incomingImage)
 
     // </rtc-template>
 {
@@ -76,6 +78,8 @@ RTC::ReturnCode_t SkypeRTC::onInitialize()
   // Set OutPort buffer
   addOutPort("comingMessage", m_comingMessageOut);
   addOutPort("inputStream", m_inputStreamOut);
+  addOutPort("previewImage", m_previewImageOut);
+  addOutPort("incomingImage", m_incomingImageOut);
   
   // Set service provider to Ports
   
@@ -145,7 +149,14 @@ RTC::ReturnCode_t SkypeRTC::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
 {
-  m_Skype.updatePreviewFrame();
+  if(m_Skype.updatePreviewFrame()) {
+  SkypeImage *preview = m_Skype.getPreviewFrame();
+  m_previewImage.width = preview->getWidth();
+  m_previewImage.height = preview->getHeight();
+
+  m_previewImage.pixels.length(preview->getBufferLength());
+  memcpy((&(m_previewImage.pixels[0])), preview->getBuffer(), preview->getBufferLength());
+  }
   return RTC::RTC_OK;
 }
 

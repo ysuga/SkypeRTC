@@ -5,13 +5,15 @@
 
 //#include "ParticipantEx.h"
 
-class ParticipantEx;
 
+//class SkypeEx;
+
+class ParticipantEx;
 
 class VideoEx : public Video
 {
  private:
-
+  SERootObject* m_pOwner;
  public:
   typedef DRef<VideoEx, Video> Ref;
   typedef DRefs<VideoEx, Video> Refs;
