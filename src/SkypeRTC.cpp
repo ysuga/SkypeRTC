@@ -133,8 +133,11 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
   while(!m_Skype.isVideoCapable()) {
     coil::usleep(1000);
   }
-  m_Skype.startPreview();
-
+  if(!m_Skype.startPreview()) {
+    std::cout << "Start Preview Failed" << std::endl;
+    return RTC::RTC_ERROR;
+  }
+  coil::usleep(1000);
   
   return RTC::RTC_OK;
 }
@@ -149,13 +152,16 @@ RTC::ReturnCode_t SkypeRTC::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
 {
-  if(m_Skype.updatePreviewFrame()) {
-  SkypeImage *preview = m_Skype.getPreviewFrame();
-  m_previewImage.width = preview->getWidth();
-  m_previewImage.height = preview->getHeight();
 
-  m_previewImage.pixels.length(preview->getBufferLength());
-  memcpy((&(m_previewImage.pixels[0])), preview->getBuffer(), preview->getBufferLength());
+  if(m_Skype.updatePreviewFrame()) {
+    //    std::cout << "Preview OK" << std::endl;
+    SkypeImage *preview = m_Skype.getPreviewFrame();
+    m_previewImage.width = preview->getWidth();
+    m_previewImage.height = preview->getHeight();
+    m_previewImage.pixels.length(preview->getBufferLength());
+    //    std::cout << "W:" << m_previewImage.width << ",H:" << m_previewImage.height << ",L:" << m_previewImage.pixels.length() << std::endl;
+    memcpy((void*)&(m_previewImage.pixels[0]), preview->getBuffer(), preview->getBufferLength());
+    m_previewImageOut.write();
   }
   return RTC::RTC_OK;
 }

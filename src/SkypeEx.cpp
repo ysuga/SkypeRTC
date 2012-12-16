@@ -1,8 +1,6 @@
 #include <iostream>
 #include "SkypeEx.h"
 
-
-
 #define SID_MAKEFOURCC(ch0, ch1, ch2, ch3) \
   ( (unsigned long)(unsigned char)(ch0)         | ( (unsigned long)(unsigned char)(ch1) << 8 ) | \
     ( (unsigned long)(unsigned char)(ch2) << 16 ) | ( (unsigned long)(unsigned char)(ch3) << 24 ) )
@@ -22,7 +20,7 @@ SkypeEx::~SkypeEx() {
 }
 
 void SkypeEx::loadKeyPair(const char* fileName) {
-  std::cout << "load key pair(" << fileName << ")" << std::endl;
+  //  std::cout << "load key pair(" << fileName << ")" << std::endl;
   FILE* f = 0;
   size_t fsize = 0;
 
@@ -195,7 +193,7 @@ bool SkypeEx::startPreview()
 #ifdef DEBUG
       std::cout << __FILE__ ":Preview OK" << std::endl;
 #endif
-      //      m_PreviewVideo->localPreview = true;
+      //      //      m_PreviewVideo->localPreview = true;
       m_PreviewVideo->setLocalPreview(true);
       m_PreviewVideo->Start();
       m_PreviewVideo->SetRemoteRendererId(m_PreviewClient.key());
@@ -213,38 +211,63 @@ bool SkypeEx::startPreview()
 
 bool SkypeEx::updatePreviewFrame()
 {
+#ifdef DEBUG
+  std::cout <<__FILE__ <<  "updatePreviewFrame()" << std::endl;
+#endif
   VideoTransportBase::bufferstruct *buffer = m_PreviewClient.getNewFrame();
+#ifdef DEBUB
+  std::cout <<__FILE__ << "getNewFrame OK" << std::endl;
+#endif
 
-  if(!buffer) {return false;}
+  if(!buffer) {
+#ifdef DEBUG
+    std::cout << __FILE__ << " buffer skipped" << std::endl;
+#endif
+    return false;
+  }
+
+  buffer = m_PreviewClient.getFrame();
+  if(!buffer) {
+#ifdef DEBUG
+    std::cout << __FILE__ << "getBuffer failed" << std::endl;
+#endif
+    return false;
+  }
   int bufferFormat;
   int bufferWidth = buffer->width;
   int bufferHeight = buffer->height;
-  if      ( buffer->fourcc == SID_MAKEFOURCC('B','I','3','2') ) {
+  
+  if ( buffer->fourcc == SID_MAKEFOURCC('B','I','3','2') ) {
     bufferFormat = SkypeImage::COLOR_ARGB8888;
-    std::cout << "ColorModel ARGB8888" << std::endl;
+    //    std::cout << "ColorModel ARGB8888" << std::endl;
   } else if ( buffer->fourcc == SID_MAKEFOURCC('B','I','2','4') ) {
     bufferFormat = SkypeImage::COLOR_RGB888;
-    std::cout << "ColorModel RGB888" << std::endl;
+    //    std::cout << "ColorModel RGB888" << std::endl;
   } else if ( buffer->fourcc == 0  ) {
     if ( buffer->bitsperpixel == 32 ) {
       bufferFormat = SkypeImage::COLOR_ARGB8888;
-      std::cout << "ColorModel ARGB8888" << std::endl;
+      //      std::cout << "ColorModel ARGB8888" << std::endl;
     } else if ( buffer->bitsperpixel == 24 ) {
       bufferFormat = SkypeImage::COLOR_RGB888;
-      std::cout << "ColorModel RGB888" << std::endl;
+      //      std::cout << "ColorModel RGB888" << std::endl;
     } else if ( buffer->bitsperpixel == 16 ) {
-      std::cout << "Unavaiable format 16" << std::endl;
+      //      std::cout << "Unavaiable format 16" << std::endl;
+    } else {
+      //      std::cout << "Unknown Color Model" << std::endl;
+      return false;
     }
   }
   
+  //  std::cout << "W:" << bufferWidth << ", H:" << bufferHeight << std::endl;
   if(bufferFormat != m_PreviewBuffer.getColorModel() ||
      bufferWidth  != m_PreviewBuffer.getWidth() ||
      bufferHeight != m_PreviewBuffer.getHeight() ) {
     m_PreviewBuffer.allocImageBuffer(bufferWidth, bufferHeight, SkypeImage::COLOR_RGB888);
   }
 
-  m_PreviewBuffer.copyToBuffer((const uint8_t*)m_PreviewClient.bufferData(buffer), bufferFormat);
 
+  int ret = m_PreviewBuffer.copyToBuffer((const uint8_t*)m_PreviewClient.bufferData(buffer), bufferFormat);
+  //  std::cout << "retval =  " << ret << std::endl;
   return true;
 }
 
