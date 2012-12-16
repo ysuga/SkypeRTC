@@ -1,0 +1,54 @@
+# SkypeRTC CMake config file
+#
+# This file sets the following variables:
+# SkypeRTC_FOUND - Always TRUE.
+# SkypeRTC_INCLUDE_DIRS - Directories containing the SkypeRTC include files.
+# SkypeRTC_IDL_DIRS - Directories containing the SkypeRTC IDL files.
+# SkypeRTC_LIBRARIES - Libraries needed to use SkypeRTC.
+# SkypeRTC_DEFINITIONS - Compiler flags for SkypeRTC.
+# SkypeRTC_VERSION - The version of SkypeRTC found.
+# SkypeRTC_VERSION_MAJOR - The major version of SkypeRTC found.
+# SkypeRTC_VERSION_MINOR - The minor version of SkypeRTC found.
+# SkypeRTC_VERSION_REVISION - The revision version of SkypeRTC found.
+# SkypeRTC_VERSION_CANDIDATE - The candidate version of SkypeRTC found.
+
+message(STATUS "Found SkypeRTC-@PROJECT_VERSION@")
+set(SkypeRTC_FOUND TRUE)
+
+find_package(<dependency> REQUIRED)
+
+#set(SkypeRTC_INCLUDE_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@"
+#    ${<dependency>_INCLUDE_DIRS}
+#    )
+#
+#set(SkypeRTC_IDL_DIRS
+#    "@CMAKE_INSTALL_PREFIX@/include/@PROJECT_NAME_LOWER@-@PROJECT_VERSION_MAJOR@/idl")
+set(SkypeRTC_INCLUDE_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@"
+    ${<dependency>_INCLUDE_DIRS}
+    )
+set(SkypeRTC_IDL_DIRS
+    "@CMAKE_INSTALL_PREFIX@/include/@CPACK_PACKAGE_FILE_NAME@/idl")
+
+
+if(WIN32)
+    set(SkypeRTC_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_STATIC_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+else(WIN32)
+    set(SkypeRTC_LIBRARIES
+        "@CMAKE_INSTALL_PREFIX@/@LIB_INSTALL_DIR@/@CMAKE_SHARED_LIBRARY_PREFIX@@PROJECT_NAME_LOWER@@CMAKE_SHARED_LIBRARY_SUFFIX@"
+        ${<dependency>_LIBRARIES}
+        )
+endif(WIN32)
+
+set(SkypeRTC_DEFINITIONS ${<dependency>_DEFINITIONS})
+
+set(SkypeRTC_VERSION @PROJECT_VERSION@)
+set(SkypeRTC_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
+set(SkypeRTC_VERSION_MINOR @PROJECT_VERSION_MINOR@)
+set(SkypeRTC_VERSION_REVISION @PROJECT_VERSION_REVISION@)
+set(SkypeRTC_VERSION_CANDIDATE @PROJECT_VERSION_CANDIDATE@)
+
