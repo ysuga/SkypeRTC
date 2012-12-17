@@ -23,13 +23,13 @@ target_link_libraries(${PROJECT_NAME_LOWER} ${OPENRTM_LIBRARIES} ${SKYPEKIT_LIBS
 
 add_executable(${PROJECT_NAME_LOWER}comp ${standalone_srcs})
 
-if(WIN32)
-target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER})
-endif(WIN32)
 
-if(LINUX)
-target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER} rt)
-endif(LINUX)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER} rt)
+else(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER})
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux") 
+
 install(TARGETS ${PROJECT_NAME_LOWER} ${PROJECT_NAME_LOWER}comp
     EXPORT ${PROJECT_NAME_LOWER}
     RUNTIME DESTINATION ${BIN_INSTALL_DIR} COMPONENT component
