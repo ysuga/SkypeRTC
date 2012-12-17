@@ -243,6 +243,7 @@ class SkypeEx : public Skype {
     if(m_RingBuffer.getSize() > 0) {
       return true;
     }
+    return false;
   }
 
   uint32_t writeApp2AppDatagram(uint8_t* buffer, uint32_t size) {

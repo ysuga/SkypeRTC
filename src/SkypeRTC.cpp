@@ -179,7 +179,7 @@ RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
     std::cout << "Received!!" << std::endl;
 	char buffer[512];
 	int size = m_Skype.readApp2AppDatagram((uint8_t*)buffer, 512);
-	std::cout << "Data is " << buffer[0] << std::endl;
+	std::cout << "Data is " << (int)buffer[0] << std::endl;
   }
   return RTC::RTC_OK;
 }
