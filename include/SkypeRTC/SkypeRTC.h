@@ -20,7 +20,6 @@
 #include <rtm/idl/InterfaceDataTypesSkel.h>
 
 #include "SkypeEx.h"
-
 // Service implementation headers
 // <rtc-template block="service_impl_h">
 

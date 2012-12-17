@@ -49,9 +49,6 @@ set(SKYPEKIT_INC_DIR  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/api
     ${SKYPEKIT_DIR}/ipc/cpp/VideoBuffers
 )
 
-set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
-    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a
-)
 
 
 # Set up installation directories
@@ -67,7 +64,26 @@ if(NOT WIN32)
     list(APPEND SKYPEKIT_INC_DIR ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/platform/threading/pthread)
 
     list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+
+set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
+    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a)
+
 endif(NOT WIN32)
+
+
+if(WIN32)
+list(APPEND SKYPEKIT_INC_DIR ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/platform/threading/win)
+
+set(SKYPEKIT_LIBS WS2_32.lib Advapi32.lib ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/skypekit-cyassl_lib.lib ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/skypekit-cppwrapper_2_lib.lib)
+
+endif(WIN32)
+
+
+
+
+
+
+
 find_package(OpenRTM REQUIRED)
 
 # Universal settings

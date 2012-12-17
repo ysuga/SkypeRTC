@@ -115,7 +115,7 @@ static SEString StreamListType(const Skype::APP2APP_STREAMS type)
 /**
  *
  */
-class SkypeEx : public Skype::Skype {
+class SkypeEx : public Skype {
  private:
 #ifdef WIN32
   VideoTransportClient <WinShm> m_PreviewClient;

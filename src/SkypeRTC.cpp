@@ -56,6 +56,7 @@ SkypeRTC::SkypeRTC(RTC::Manager* manager)
 
     // </rtc-template>
 {
+//	m_pSkype = new SkypeEx();
 }
 
 /*!
@@ -95,7 +96,7 @@ RTC::ReturnCode_t SkypeRTC::onInitialize()
   bindParameter("passwd", m_passwd, "pass");
   bindParameter("caller", m_caller, "ysuga0731");
   bindParameter("keyFile", m_keyFile, "/User/ysuga/key.pem");
-  bindParameter("skypekit", m_skypekit, "");
+  bindParameter("skypekit", m_skypekit, "skypeKit.exe");
   // </rtc-template>
   
   return RTC::RTC_OK;
@@ -152,7 +153,6 @@ RTC::ReturnCode_t SkypeRTC::onDeactivated(RTC::UniqueId ec_id)
 
 RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
 {
-
   if(m_Skype.updatePreviewFrame()) {
     //    std::cout << "Preview OK" << std::endl;
     SkypeImage *preview = m_Skype.getPreviewFrame();
