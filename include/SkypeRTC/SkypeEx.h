@@ -25,6 +25,92 @@
 #include "SkypeImage.h"
 
 
+template <class T>
+class SkypeRingBuffer {
+ private:
+  T** m_ppBuffer;
+  uint32_t* m_pSizes;
+  uint32_t m_BufferSize;
+  uint32_t m_BufferLast;
+  uint32_t m_BufferTop;
+
+ public:
+ SkypeRingBuffer(uint32_t size = 8): m_BufferLast(0), m_BufferTop(0) {
+    m_ppBuffer = new T*[size];
+    m_pSizes = new uint32_t[size];
+    m_BufferSize = size;
+    for(uint32_t i = 0;i < m_BufferSize;i++) {
+      m_ppBuffer[i] = NULL;
+    }
+  }
+
+
+  virtual ~SkypeRingBuffer() {
+    for(uint32_t i = 0;i < m_BufferSize;i++) {
+      delete m_ppBuffer[i];
+    }
+    delete m_ppBuffer;
+  }
+
+  uint32_t getSize() {
+    uint32_t size = m_BufferTop - m_BufferLast;
+    if(size < 0) {
+      size += m_BufferSize;
+    }
+    return size;
+  }
+
+  bool pop_front(T* data, uint32_t bufSize, uint32_t *size) {
+    if(getSize() > 0) {
+      if(bufSize < m_pSizes[m_BufferLast]) {
+	return false;
+      }
+      memcpy((void*)data, m_ppBuffer[m_BufferLast], sizeof(T)*m_pSizes[m_BufferLast]);
+      *size = m_pSizes[m_BufferLast];
+      m_BufferLast++;
+      return true;
+    } 
+    return false;
+  }
+
+  bool push_back(const T* data, const uint32_t size) {
+    delete m_ppBuffer[m_BufferTop];
+    m_ppBuffer[m_BufferTop] = new T[size];
+    memcpy((void*)m_ppBuffer[m_BufferTop], data, sizeof(T)*size);
+    m_pSizes[m_BufferTop] = size;
+    m_BufferTop++;
+    if(m_BufferTop >= m_BufferSize) {m_BufferTop = 0;}
+    if(m_BufferTop == m_BufferLast) {
+      return false;
+    }
+
+    return true;
+  }
+
+};
+
+
+SEString StreamListType(const Skype::APP2APP_STREAMS type)
+{
+  switch (type)
+    {
+    case Skype::ALL_STREAMS:
+      return "all streams";
+      break;
+
+    case Skype::SENDING_STREAMS:
+      return "sending stream";
+      break;
+
+    case Skype::RECEIVED_STREAMS:
+      return "receiving stream";
+      break;
+
+    default:
+      return "unknown stream type";
+      break;
+    };
+};
 
 /**
  *
@@ -55,8 +141,11 @@ class SkypeEx : public Skype::Skype {
   bool m_VideoCapable;
   std::string m_VideoDeviceName;
   std::string m_VideoDeviceId;
-
-
+  std::string m_StreamName;
+  
+  bool m_StreamConnected;
+  std::string m_AppName;
+  SkypeRingBuffer<uint8_t> m_RingBuffer;
  private:
   SkypeImage m_PreviewBuffer;
   SkypeImage m_IncomingBuffer;
@@ -82,6 +171,8 @@ class SkypeEx : public Skype::Skype {
   std::string getAutoTakeUserName() {
     return m_AutoTakeUserName;
   }
+
+  bool isStreamConnected() {return m_StreamConnected;}
 
   void setAutoTakeUserName(const std::string userName) {
     m_AutoTakeUserName = userName;
@@ -128,6 +219,8 @@ class SkypeEx : public Skype::Skype {
  public:
   void onContactGroupChange(ContactGroupEx& contactGroup);
 
+  bool App2AppStreamConnect(std::string &AppName, std::string& buddyName);
+
   void OnApp2AppStreamListChange(const Sid::String &appname, 
 				 const APP2APP_STREAMS &listType, 
 				 const Sid::List_String &streams, 
@@ -136,6 +229,35 @@ class SkypeEx : public Skype::Skype {
   void OnApp2AppDatagram  (const Sid::String &appname, 
 			   const Sid::String &stream, 
 			   const Sid::Binary &data);
+
+  bool isApp2AppDatagramPacketReceived() {
+    if(m_RingBuffer.getSize() > 0) {
+      return true;
+    }
+  }
+
+  uint32_t writeApp2AppDatagram(uint8_t* buffer, uint32_t size) {
+    if(isStreamConnected()) {
+      SEBinary dataBuffer;
+      dataBuffer.set(buffer, size);
+      bool result;
+      App2AppDatagram(SEString(m_AppName.c_str()), SEString(m_StreamName.c_str()), dataBuffer, result);
+      if(result) {
+	return size;
+      }
+    }
+    return -1;
+  }
+  
+  uint32_t readApp2AppDatagram(uint8_t* buffer, uint32_t bufSize) {
+    uint32_t actualSize;
+    if(m_RingBuffer.pop_front(buffer, bufSize, &actualSize)) {
+      return actualSize;
+    }
+    return -1;
+  }
+    
+  
  public:
   void OnConversationListChange(const ConversationRef &conversation, const Conversation::LIST_TYPE &type, const bool &added);
 

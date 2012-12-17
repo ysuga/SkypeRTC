@@ -1,13 +1,15 @@
 #include <iostream>
 #include "SkypeEx.h"
 
+
+
 #define SID_MAKEFOURCC(ch0, ch1, ch2, ch3) \
   ( (unsigned long)(unsigned char)(ch0)         | ( (unsigned long)(unsigned char)(ch1) << 8 ) | \
     ( (unsigned long)(unsigned char)(ch2) << 16 ) | ( (unsigned long)(unsigned char)(ch3) << 24 ) )
 
 
 SkypeEx::SkypeEx() :
-  m_AutoTakeCall(false), m_LiveSessionUp(false), m_VideoCapable(false)
+  m_AutoTakeCall(false), m_LiveSessionUp(false), m_VideoCapable(false), m_StreamConnected(false)
 {
   unsigned int list[2];
   list[0] = SID_MAKEFOURCC('B','I','3','2');
@@ -271,12 +273,18 @@ bool SkypeEx::updatePreviewFrame()
   return true;
 }
 
+bool SkypeEx::App2AppStreamConnect(std::string& appName, std::string &buddyName) {
+  bool result;
+  App2AppConnect(SEString(appName.c_str()), SEString(buddyName.c_str()), result);
+  return result;
+}
+
 void SkypeEx::OnApp2AppStreamListChange(const Sid::String &appname, 
 				 const APP2APP_STREAMS &listType, 
 				 const Sid::List_String &streams, 
 				 const Sid::List_uint &receivedSizes)
 {
-  /*
+
   if (streams.size() != 0) {
     // Normally the streamcount in this event should be eithe 1 or 0.
     // More streams are possible when there are more than 2 connected
@@ -287,22 +295,24 @@ void SkypeEx::OnApp2AppStreamListChange(const Sid::String &appname,
 	     (const char*)StreamListType(listType),
 	     (const char*)appname,
 	     (const char*)streams[i]);
-      streamName = streams[i];
+      //      streamName = streams[i];
+      m_AppName = (const char*)appname;
+      m_StreamName = std::string( (const char*)streams[i] );
     }
 
-    if (!appConnected) {
-      appConnected = true;
+    if (!isStreamConnected()) {
+      m_StreamConnected = true;
       printf("You can now type and send datagrams to remote instance.¥n");
     }
   } else {
     if (listType == ALL_STREAMS) {
       // Remote side dropped connection.
       printf("No more app2app streams.¥n");
-      streamName = "";
-      quitCommand = true;
+      m_StreamName = "";
+      m_StreamConnected = false;
     }
   }
-  */
+
 }
 
 
@@ -314,7 +324,7 @@ void SkypeEx::OnApp2AppDatagram  (const Sid::String &appname,
 			   const Sid::String &stream, 
 			   const Sid::Binary &data)
 {
-
+  m_RingBuffer.push_back((const unsigned char*)(const char*)data, data.size());
 }
 
 void SkypeEx::test()
