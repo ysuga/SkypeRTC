@@ -60,6 +60,10 @@ class SkypeRingBuffer {
     return size;
   }
 
+  uint32_t getTopDataSlotSize() {
+	  return m_pSizes[m_BufferLast];
+  }
+
   bool pop_front(T* data, uint32_t bufSize, uint32_t *size) {
     if(getSize() > 0) {
       if(bufSize < m_pSizes[m_BufferLast]) {
@@ -243,6 +247,11 @@ class SkypeEx : public Skype {
     if(m_RingBuffer.getSize() > 0) {
       return true;
     }
+	return false;
+  }
+
+  uint32_t getApp2AppDatagramPacketSize() {
+	  return m_RingBuffer.getTopDataSlotSize();
   }
 
   uint32_t writeApp2AppDatagram(uint8_t* buffer, uint32_t size) {
@@ -258,6 +267,8 @@ class SkypeEx : public Skype {
     return -1;
   }
   
+
+
   uint32_t readApp2AppDatagram(uint8_t* buffer, uint32_t bufSize) {
     uint32_t actualSize;
     if(m_RingBuffer.pop_front(buffer, bufSize, &actualSize)) {
