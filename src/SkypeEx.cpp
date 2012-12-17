@@ -341,3 +341,22 @@ void SkypeEx::test()
 
 
 }
+
+
+
+bool SkypeEx::callTarget(const std::string& target)
+{
+	if(this->isLiveSessionUp()) {
+		return false;
+	}
+
+	SEString Target = target.c_str();
+	ConversationEx::Ref call;
+	SEStringList callTargets;
+
+	callTargets.append(Target);
+	this->GetConversationByParticipants(callTargets, call, true, true);
+
+	call->RingOthers();
+	return true;
+}

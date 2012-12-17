@@ -254,6 +254,12 @@ class SkypeRTC
    * - DefaultValue: skypekit.exe
    */
   std::string m_skypekit;
+  /*!
+   * 
+   * - Name:  target
+   * - DefaultValue: 
+   */
+  std::string m_target;
 
   // </rtc-template>
 

@@ -30,6 +30,7 @@ static const char* skypertc_spec[] =
     "conf.default.keyFile", "key.pem",
     "conf.default.skypekit", "skypekit.exe",
     "conf.default.caller", "ysuga0731",
+	"conf.default.target", "",
     // Widget
     "conf.__widget__.skypeId", "text",
     "conf.__widget__.passwd", "text",
@@ -97,6 +98,8 @@ RTC::ReturnCode_t SkypeRTC::onInitialize()
   bindParameter("caller", m_caller, "ysuga0731");
   bindParameter("keyFile", m_keyFile, "/User/ysuga/key.pem");
   bindParameter("skypekit", m_skypekit, "skypeKit.exe");
+  
+  bindParameter("target", m_target, "");
   // </rtc-template>
   
   return RTC::RTC_OK;
@@ -140,6 +143,10 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
   }
   coil::usleep(1000);
   
+  if(m_target.length() != 0) {
+	m_Skype.callTarget(m_target);
+  }
+
   return RTC::RTC_OK;
 }
 

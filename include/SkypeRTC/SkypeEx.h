@@ -217,6 +217,8 @@ class SkypeEx : public Skype {
 
   void logout();
 
+  bool callTarget(const std::string& target);
+
   std::vector<std::string> getContacts();
   
   bool startPreview();
