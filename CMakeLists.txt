@@ -37,6 +37,23 @@ endif(STATIC_LIBS)
 
 set(SKYPEKIT_DIR $ENV{SKYPEKIT_ROOT})
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+set(SKYPEKIT_BIN bin/mac-x86/mac-x86-skypekit)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+set(SKYPEKIT_BIN bin/linux-x86/linux-x86-skypekit)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+if (WIN32)
+set(SKYPEKIT_BIN bin/windows-x86/windows-x86-skypekit.exe)
+endif (WIN32)
+
+
+configure_file(${PROJECT_SOURCE_DIR}/include/SkypeRTC/config.h.cmake
+                ${PROJECT_SOURCE_DIR}/include/SkypeRTC/config.h)
+
+
 set(SKYPEKIT_INC_DIR  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/api 
     ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/ipc 
     ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/types 

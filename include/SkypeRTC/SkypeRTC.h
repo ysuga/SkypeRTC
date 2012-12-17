@@ -19,6 +19,8 @@
 #include <rtm/idl/ExtendedDataTypesSkel.h>
 #include <rtm/idl/InterfaceDataTypesSkel.h>
 
+
+#include "config.h"
 #include "SkypeEx.h"
 // Service implementation headers
 // <rtc-template block="service_impl_h">
@@ -260,6 +262,12 @@ class SkypeRTC
    * - DefaultValue: 
    */
   std::string m_target;
+  /*!
+   * 
+   * - Name:  App2AppConnect
+   * - DefaultValue: 
+   */
+  bool m_requireApp2AppConnect;
 
   // </rtc-template>
 

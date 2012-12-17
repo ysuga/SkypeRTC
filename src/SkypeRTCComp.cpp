@@ -88,10 +88,12 @@ int main (int argc, char** argv)
 
   // run the manager in blocking mode
   // runManager(false) is the default.
-  manager->runManager();
+  // manager->runManager();
 
   // If you want to run the manager in non-blocking mode, do like this
-  // manager->runManager(true);
+  manager->runManager(true);
+
+  system(SKYPEKIT_PATH);
 
   return 0;
 }

@@ -30,7 +30,8 @@ static const char* skypertc_spec[] =
     "conf.default.keyFile", "key.pem",
     "conf.default.skypekit", "skypekit.exe",
     "conf.default.caller", "ysuga0731",
-	"conf.default.target", "",
+    "conf.default.target", "",
+    "conf.default.requireApp2AppConnect", "false",
     // Widget
     "conf.__widget__.skypeId", "text",
     "conf.__widget__.passwd", "text",
@@ -98,8 +99,8 @@ RTC::ReturnCode_t SkypeRTC::onInitialize()
   bindParameter("caller", m_caller, "ysuga0731");
   bindParameter("keyFile", m_keyFile, "/User/ysuga/key.pem");
   bindParameter("skypekit", m_skypekit, "skypeKit.exe");
-  
   bindParameter("target", m_target, "");
+  bindParameter("requireApp2AppConnect", m_requireApp2AppConnect, "false");
   // </rtc-template>
   
   return RTC::RTC_OK;
@@ -133,6 +134,7 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
   m_Skype.loadKeyPair(m_keyFile.c_str());
   m_Skype.login(m_skypeId.c_str(), m_passwd.c_str());
   m_Skype.getContacts();
+
   
   while(!m_Skype.isVideoCapable()) {
     coil::usleep(1000);
@@ -151,9 +153,12 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
     m_Skype.App2AppStreamConnect(appName, m_caller);
   }
 
+  if(m_requireApp2AppConnect) {
+    std::cout << "Require Connect" << std::endl;
 
-  while(!m_Skype.isStreamConnected()) {
-	  coil::usleep(1000);
+    while(!m_Skype.isStreamConnected()) {
+      coil::usleep(1000);
+    }
   }
 
   return RTC::RTC_OK;
