@@ -90,7 +90,7 @@ class SkypeRingBuffer {
 };
 
 
-SEString StreamListType(const Skype::APP2APP_STREAMS type)
+static SEString StreamListType(const Skype::APP2APP_STREAMS type)
 {
   switch (type)
     {
@@ -131,6 +131,7 @@ class SkypeEx : public Skype::Skype {
   ConversationEx::Ref m_LiveSession;
   ConversationEx::Refs m_LiveSessionList;
   VideoEx::Ref m_PreviewVideo;
+  VideoEx::Ref m_IncomingVideo;
  private:
   std::string m_KeyString;
   std::string m_AutoTakeUserName;
@@ -177,6 +178,12 @@ class SkypeEx : public Skype::Skype {
   void setAutoTakeUserName(const std::string userName) {
     m_AutoTakeUserName = userName;
     setAutoTakeCall(true);
+  }
+
+  void setAutoTakeVideo(VideoEx::Ref videoRef) {
+    m_IncomingVideo = videoRef;
+    m_IncomingVideo->Start();
+    m_IncomingVideo->SetRemoteRendererId(m_IncomingClient.key());
   }
 
   void setAutoTakeCall(const bool flag) {

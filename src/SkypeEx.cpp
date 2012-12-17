@@ -273,6 +273,9 @@ bool SkypeEx::updatePreviewFrame()
   return true;
 }
 
+
+
+
 bool SkypeEx::App2AppStreamConnect(std::string& appName, std::string &buddyName) {
   bool result;
   App2AppConnect(SEString(appName.c_str()), SEString(buddyName.c_str()), result);

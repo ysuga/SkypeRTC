@@ -56,4 +56,3 @@ void VideoEx::OnChange(int prop)
 }
 
 
-
