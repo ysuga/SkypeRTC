@@ -65,8 +65,11 @@ if(NOT WIN32)
 
     list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
-set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
-    ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a)
+#set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cppwrapper_2_lib.a
+#   ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/libskypekit-cyassl_lib.a)
+set(SKYPEKIT_LIBS  ${SKYPEKIT_DIR}/lib/libskypekit-cppwrapper_2_lib.a
+   ${SKYPEKIT_DIR}/lib/libskypekit-cyassl_lib.a
+   ${SKYPEKIT_DIR}/lib/libskypekit-videobuffers.a)
 
 endif(NOT WIN32)
 

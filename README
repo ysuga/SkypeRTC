@@ -1,0 +1,46 @@
+SkypeRTC
+
+@author Yuki Suga, Sugar Sweet Robotics, Co. Ltd.
+@e-mail ysuga@ysuga.net
+
+
+1. How To Build
+
+
+1.1 Prepare SkypeKit 
+
+A. Download SkypeKit for Desktop from 
+
+https://developer.skype.com
+(Sorry, this will costs $5..)
+
+$ tar zxfv sdp-distro-desktop-skypekit_4.5.0.105_2859374
+
+
+B. Build SkypeKit All
+
+$ cd sdp-distro-desktop-skypekit_4.5.0*
+$ bash build_all.sh (for Mac-Users, use bash)
+
+
+C. Get Developmental Key File from Skypekit Developer Page
+
+https://developer.skype.com
+
+
+
+1.2 Set Environemntal Variable
+
+$ export SKYPEKIT_ROOT=/Users/ysuga/Development/skype/sdp-distro-desktop-skypekit_4.5.0.105_2859374
+(Change for your environment)
+
+1.3 Cmake and Build
+
+$ cd SkypeRTC
+$ mkdir build
+$ cd build
+$ cmake ../
+
+
+2. How To Launch
+
