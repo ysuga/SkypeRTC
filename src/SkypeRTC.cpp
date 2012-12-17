@@ -147,6 +147,11 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
 	m_Skype.callTarget(m_target);
   }
 
+  if(m_Skype.isApp2AppDatagramPacketReceived()) {
+	  std::cout << "Received!!!" << std::endl;
+	  
+  }
+
   return RTC::RTC_OK;
 }
 
