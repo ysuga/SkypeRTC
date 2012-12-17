@@ -151,11 +151,6 @@ RTC::ReturnCode_t SkypeRTC::onActivated(RTC::UniqueId ec_id)
     m_Skype.App2AppStreamConnect(appName, m_caller);
   }
 
-  if(m_Skype.isApp2AppDatagramPacketReceived()) {
-	  std::cout << "Received!!!" << std::endl;
-	  
-  }
-
   return RTC::RTC_OK;
 }
 
@@ -180,15 +175,11 @@ RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
     m_previewImageOut.write();
   }
   
-   std::cout << "input:" << std::endl;
-   char c = getchar();
-    if(c != 'q') {
-      m_Skype.writeApp2AppDatagram((uint8_t*)&c, 1);
-    }
   if(m_Skype.isApp2AppDatagramPacketReceived()) {
     std::cout << "Received!!" << std::endl;
-    int c;
-    std::cin >> c;
+	char buffer[512];
+	int size = m_Skype.readApp2AppDatagram((uint8_t*)buffer, 512);
+	std::cout << "Data is " << buffer[0] << std::endl;
   }
   return RTC::RTC_OK;
 }
