@@ -278,6 +278,9 @@ bool SkypeEx::updatePreviewFrame()
 
 bool SkypeEx::App2AppStreamConnect(std::string& appName, std::string &buddyName) {
   bool result;
+  App2AppCreate(SEString(appName.c_str()), result);
+  if(!result) return false;
+
   App2AppConnect(SEString(appName.c_str()), SEString(buddyName.c_str()), result);
   return result;
 }
@@ -288,6 +291,7 @@ void SkypeEx::OnApp2AppStreamListChange(const Sid::String &appname,
 				 const Sid::List_uint &receivedSizes)
 {
 
+  std::cout << __FILE__ << ":OnApp2AppStreamListChange" << std::endl;
   if (streams.size() != 0) {
     // Normally the streamcount in this event should be eithe 1 or 0.
     // More streams are possible when there are more than 2 connected

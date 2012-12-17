@@ -180,11 +180,11 @@ RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
     m_previewImageOut.write();
   }
   
-  //  std::cout << "input:" << std::endl;
-  //  char c = getchar();
-  //  if(c != 'q') {
-  //    m_Skype.writeApp2AppDatagram((uint8_t*)&c, 1);
-  //  }
+   std::cout << "input:" << std::endl;
+   char c = getchar();
+    if(c != 'q') {
+      m_Skype.writeApp2AppDatagram((uint8_t*)&c, 1);
+    }
   if(m_Skype.isApp2AppDatagramPacketReceived()) {
     std::cout << "Received!!" << std::endl;
     int c;
