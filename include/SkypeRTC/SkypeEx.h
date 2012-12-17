@@ -247,15 +247,11 @@ class SkypeEx : public Skype {
     if(m_RingBuffer.getSize() > 0) {
       return true;
     }
-<<<<<<< HEAD
     return false;
-=======
-	return false;
   }
 
   uint32_t getApp2AppDatagramPacketSize() {
 	  return m_RingBuffer.getTopDataSlotSize();
->>>>>>> 433ffc2ba7e43a066787795d6aeafafe341e0392
   }
 
   uint32_t writeApp2AppDatagram(uint8_t* buffer, uint32_t size) {
