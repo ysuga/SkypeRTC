@@ -30,7 +30,7 @@ OBJECTS=skypetest.o SkypeEx.o AccountEx.o ContactGroupEx.o ParticipantEx.o Conve
 	${CC} ${CFLAGS} -c $<
 
 skypetest: ${OBJECTS}
-	${CC} ${LDFLAGS} -o skypetest ${OBJECTS} ${SKYPEKITLIB}
+	${CC} ${LDFLAGS} -o skypetest ${OBJECTS} ${SKYPEKITLIB} -lrt
 
 
 clean:

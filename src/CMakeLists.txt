@@ -22,7 +22,7 @@ add_dependencies(${PROJECT_NAME_LOWER} ALL_IDL_TGT)
 target_link_libraries(${PROJECT_NAME_LOWER} ${OPENRTM_LIBRARIES} ${SKYPEKIT_LIBS})
 
 add_executable(${PROJECT_NAME_LOWER}comp ${standalone_srcs})
-target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER})
+target_link_libraries(${PROJECT_NAME_LOWER}comp ${PROJECT_NAME_LOWER} rt)
 
 install(TARGETS ${PROJECT_NAME_LOWER} ${PROJECT_NAME_LOWER}comp
     EXPORT ${PROJECT_NAME_LOWER}
