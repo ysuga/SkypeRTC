@@ -175,12 +175,22 @@ RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
     m_previewImageOut.write();
   }
   
-  if(m_Skype.isApp2AppDatagramPacketReceived()) {
+
+
+#ifdef WIN32
+  std::cout << "Input:" << std::ends;
+	char c = getchar();
+	m_Skype.writeApp2AppDatagram((uint8_t*)c, 1);
+#else
+    if(m_Skype.isApp2AppDatagramPacketReceived()) {
     std::cout << "Received!!" << std::endl;
 	char buffer[512];
 	int size = m_Skype.readApp2AppDatagram((uint8_t*)buffer, 512);
-	std::cout << "Data is " << buffer[0] << std::endl;
+	std::cout << "Data is " << (int)buffer[0] << std::endl;
   }
+
+#endif
+
   return RTC::RTC_OK;
 }
 
