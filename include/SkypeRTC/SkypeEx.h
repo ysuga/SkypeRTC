@@ -144,6 +144,8 @@ class SkypeEx : public Skype {
   bool m_LiveSessionUp;
 
   bool m_VideoCapable;
+
+  bool m_IncomingVideoAvailable;
   std::string m_VideoDeviceName;
   std::string m_VideoDeviceId;
   std::string m_StreamName;
@@ -186,8 +188,10 @@ class SkypeEx : public Skype {
 
   void setAutoTakeVideo(VideoEx::Ref videoRef) {
     m_IncomingVideo = videoRef;
+	m_IncomingVideo->setLocalPreview(false);
     m_IncomingVideo->Start();
     m_IncomingVideo->SetRemoteRendererId(m_IncomingClient.key());
+	m_IncomingVideoAvailable = true;
   }
 
   void setAutoTakeCall(const bool flag) {
@@ -199,6 +203,8 @@ class SkypeEx : public Skype {
   }
   
   bool updatePreviewFrame();
+
+  bool updateIncomingFrame();
 
   bool isVideoCapable() {return m_VideoCapable;}
   bool isLiveSessionUp() { return m_LiveSessionUp; }

@@ -94,7 +94,8 @@ endif(NOT WIN32)
 if(WIN32)
 list(APPEND SKYPEKIT_INC_DIR ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/src/platform/threading/win)
 
-set(SKYPEKIT_LIBS WS2_32.lib Advapi32.lib ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/skypekit-cyassl_lib.lib ${SKYPEKIT_DIR}/interfaces/skype/cpp_embedded/build/skypekit-cppwrapper_2_lib.lib)
+set(SKYPEKIT_LIBS WS2_32.lib Advapi32.lib ${SKYPEKIT_DIR}/lib/skypekit-cyassl_lib.lib ${SKYPEKIT_DIR}/lib/skypekit-cppwrapper_2_lib.lib 
+   ${SKYPEKIT_DIR}/lib/skypekit-videobuffers.lib)
 
 endif(WIN32)
 

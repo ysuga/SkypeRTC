@@ -31,12 +31,14 @@ static const char* skypertc_spec[] =
     "conf.default.skypekit", "skypekit.exe",
     "conf.default.caller", "ysuga0731",
     "conf.default.target", "",
-    "conf.default.requireApp2AppConnect", "false",
+    "conf.default.requireApp2AppConnect", "0",
     // Widget
     "conf.__widget__.skypeId", "text",
     "conf.__widget__.passwd", "text",
     "conf.__widget__.keyFile", "text",
     "conf.__widget__.skypekit", "text",
+	
+    "conf.__widget__.requireApp2AppConnect", "checkbox",
     // Constraints
     ""
   };
@@ -99,8 +101,9 @@ RTC::ReturnCode_t SkypeRTC::onInitialize()
   bindParameter("caller", m_caller, "ysuga0731");
   bindParameter("keyFile", m_keyFile, "/User/ysuga/key.pem");
   bindParameter("skypekit", m_skypekit, "skypeKit.exe");
+  
+  bindParameter("requireApp2AppConnect", m_requireApp2AppConnect, "0");
   bindParameter("target", m_target, "");
-  bindParameter("requireApp2AppConnect", m_requireApp2AppConnect, "false");
   // </rtc-template>
   
   return RTC::RTC_OK;
@@ -183,6 +186,17 @@ RTC::ReturnCode_t SkypeRTC::onExecute(RTC::UniqueId ec_id)
     //    std::cout << "W:" << m_previewImage.width << ",H:" << m_previewImage.height << ",L:" << m_previewImage.pixels.length() << std::endl;
     memcpy((void*)&(m_previewImage.pixels[0]), preview->getBuffer(), preview->getBufferLength());
     m_previewImageOut.write();
+  }
+
+  if(m_Skype.updateIncomingFrame()) {
+    SkypeImage *img = m_Skype.getIncomingFrame();
+    m_incomingImage.width = img->getWidth();
+    m_incomingImage.height = img->getHeight();
+    m_incomingImage.pixels.length(img->getBufferLength());
+    //    std::cout << "W:" << m_previewImage.width << ",H:" << m_previewImage.height << ",L:" << m_previewImage.pixels.length() << std::endl;
+    memcpy((void*)&(m_incomingImage.pixels[0]), img->getBuffer(), img->getBufferLength());
+    m_incomingImageOut.write();
+
   }
   
 

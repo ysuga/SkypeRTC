@@ -267,7 +267,7 @@ class SkypeRTC
    * - Name:  App2AppConnect
    * - DefaultValue: 
    */
-  bool m_requireApp2AppConnect;
+  int m_requireApp2AppConnect;
 
   // </rtc-template>
 

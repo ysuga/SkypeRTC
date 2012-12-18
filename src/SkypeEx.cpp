@@ -9,7 +9,7 @@
 
 
 SkypeEx::SkypeEx() :
-  m_AutoTakeCall(false), m_LiveSessionUp(false), m_VideoCapable(false), m_StreamConnected(false)
+  m_AutoTakeCall(false), m_LiveSessionUp(false), m_VideoCapable(false), m_StreamConnected(false), m_IncomingVideoAvailable(false)
 {
   unsigned int list[2];
   list[0] = SID_MAKEFOURCC('B','I','3','2');
@@ -211,6 +211,60 @@ bool SkypeEx::startPreview()
   return false;
 }
 
+
+
+bool SkypeEx::updateIncomingFrame()
+{
+	if(!m_IncomingVideoAvailable) {
+		return false;
+	}
+	VideoTransportBase::bufferstruct *buffer = m_IncomingClient.getNewFrame();
+
+  if(!buffer) {
+#ifdef DEBUG
+    std::cout << __FILE__ << " buffer skipped" << std::endl;
+#endif
+    return false;
+  }
+
+  int bufferFormat;
+  int bufferWidth = buffer->width;
+  int bufferHeight = buffer->height;
+  
+  if ( buffer->fourcc == SID_MAKEFOURCC('B','I','3','2') ) {
+    bufferFormat = SkypeImage::COLOR_ARGB8888;
+    //    std::cout << "ColorModel ARGB8888" << std::endl;
+  } else if ( buffer->fourcc == SID_MAKEFOURCC('B','I','2','4') ) {
+    bufferFormat = SkypeImage::COLOR_RGB888;
+    //    std::cout << "ColorModel RGB888" << std::endl;
+  } else if ( buffer->fourcc == 0  ) {
+    if ( buffer->bitsperpixel == 32 ) {
+      bufferFormat = SkypeImage::COLOR_ARGB8888;
+      //      std::cout << "ColorModel ARGB8888" << std::endl;
+    } else if ( buffer->bitsperpixel == 24 ) {
+      bufferFormat = SkypeImage::COLOR_RGB888;
+      //      std::cout << "ColorModel RGB888" << std::endl;
+    } else if ( buffer->bitsperpixel == 16 ) {
+      //      std::cout << "Unavaiable format 16" << std::endl;
+    } else {
+      //      std::cout << "Unknown Color Model" << std::endl;
+      return false;
+    }
+  }
+  
+  //  std::cout << "W:" << bufferWidth << ", H:" << bufferHeight << std::endl;
+  if(bufferFormat != m_IncomingBuffer.getColorModel() ||
+     bufferWidth  != m_IncomingBuffer.getWidth() ||
+     bufferHeight != m_IncomingBuffer.getHeight() ) {
+    m_IncomingBuffer.allocImageBuffer(bufferWidth, bufferHeight, SkypeImage::COLOR_RGB888);
+  }
+
+
+  int ret = m_IncomingBuffer.copyToBuffer((const uint8_t*)m_IncomingClient.bufferData(buffer), bufferFormat);
+  //  std::cout << "retval =  " << ret << std::endl;
+  return true;
+}
+
 bool SkypeEx::updatePreviewFrame()
 {
 #ifdef DEBUG
@@ -229,13 +283,6 @@ bool SkypeEx::updatePreviewFrame()
     return false;
   }
 
-  //  buffer = m_PreviewClient.getFrame();
-  if(!buffer) {
-#ifdef DEBUG
-    std::cout << __FILE__ << "getBuffer failed" << std::endl;
-#endif
-    return false;
-  }
   int bufferFormat;
   int bufferWidth = buffer->width;
   int bufferHeight = buffer->height;
