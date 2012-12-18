@@ -216,7 +216,8 @@ bool SkypeEx::updatePreviewFrame()
 #ifdef DEBUG
   std::cout <<__FILE__ <<  "updatePreviewFrame()" << std::endl;
 #endif
-  VideoTransportBase::bufferstruct *buffer = m_PreviewClient.getNewFrame();
+  //  VideoTransportBase::bufferstruct *buffer = m_PreviewClient.getNewFrame();
+  VideoTransportBase::bufferstruct *buffer = m_PreviewClient.getFrame();
 #ifdef DEBUB
   std::cout <<__FILE__ << "getNewFrame OK" << std::endl;
 #endif
@@ -228,7 +229,7 @@ bool SkypeEx::updatePreviewFrame()
     return false;
   }
 
-  buffer = m_PreviewClient.getFrame();
+  //  buffer = m_PreviewClient.getFrame();
   if(!buffer) {
 #ifdef DEBUG
     std::cout << __FILE__ << "getBuffer failed" << std::endl;

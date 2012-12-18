@@ -24,17 +24,18 @@ class SkypeImage {
   };
 
  SkypeImage() : m_pBuffer(NULL), m_Width(0), m_Height(0), m_BufferLength(0), m_ColorModel(0) {}
-  SkypeImage(uint32_t width, uint32_t height, uint32_t colorModel) {
+ SkypeImage(uint32_t width, uint32_t height, uint32_t colorModel) : m_pBuffer(NULL) {
     allocImageBuffer(width, height, colorModel);
   }
 
-  SkypeImage(uint8_t* src, uint32_t width, uint32_t height, uint32_t colorModel) {
+ SkypeImage(uint8_t* src, uint32_t width, uint32_t height, uint32_t colorModel) : m_pBuffer(NULL) {
     allocImageBuffer(width, height, colorModel);
     memcpy(m_pBuffer, src, m_BufferLength);
   }
 
   public:
     void allocImageBuffer(uint32_t width, uint32_t height, uint32_t colorModel) {
+      delete m_pBuffer;
       m_Width = width;
       m_Height = height;
       m_ColorModel = colorModel;
